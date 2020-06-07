@@ -4,18 +4,18 @@ import { Helmet } from 'react-helmet';
 import Layout from 'components/Layout';
 import Container from 'components/Container';
 
-const SecondPage = () => {
+const GraphPage = () => {
   return (
     <Layout pageName="two">
       <Helmet>
-        <title>Page Two</title>
+        <title>Graphs</title>
       </Helmet>
       <Container type="content" className="text-center">
-        <h1>Page Two</h1>
-        <p>Welcome to page 2</p>
+        <h2>Page for graphs</h2>
+        <p>Graphs!</p>
       </Container>
     </Layout>
   );
 };
 
-export default SecondPage;
+export default GraphPage;
