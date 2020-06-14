@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {fetchData} from '../api';
+import {fetchData, fetchHistData} from '../api';
 import {Line} from 'react-chartjs-2';
 
 class Chart extends Component {
@@ -33,7 +33,8 @@ class Chart extends Component {
     }
 
     async loadData(country) {
-        const {cases, deaths, recovered} = await fetchData(country);
+        const {cases, deaths, recovered} = await fetchHistData(country);
+        console.log(await fetchData());
         this.setState({
             chartData: {
                 labels: Object.keys(cases),

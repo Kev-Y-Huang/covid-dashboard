@@ -8,6 +8,7 @@ import Container from 'components/Container';
 import Mapbox from "../components/Mapbox";
 
 const options = [
+    {value: 'all', label: 'World'},
     {value: 'Brazil', label: 'Brazil'},
     {value: 'China', label: 'China'},
     {value: 'Japan', label: 'Japan'},
@@ -18,7 +19,7 @@ const options = [
 
 
 const GraphPage = () => {
-    const [selectedValue, setSelectedValue] = useState('USA');
+    const [selectedValue, setSelectedValue] = useState('all');
 
     const handleChange = e => {
         setSelectedValue(e.value);
