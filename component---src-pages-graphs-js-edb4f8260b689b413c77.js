@@ -1,2 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[5],{"4rBa":function(e,a,t){"use strict";t.r(a);var n=t("q1tI"),l=t.n(n),r=t("qhky"),c=t("7oih"),p=t("VUD3");a.default=function(){return l.a.createElement(c.a,{pageName:"two"},l.a.createElement(r.a,null,l.a.createElement("title",null,"Graphs")),l.a.createElement(p.a,{type:"content",className:"text-center"},l.a.createElement("h2",null,"Page for graphs"),l.a.createElement("p",null,"Graphs!")))}}}]);
-//# sourceMappingURL=component---src-pages-graphs-js-edb4f8260b689b413c77.js.map
