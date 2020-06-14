@@ -33,26 +33,26 @@ class Chart extends Component {
     }
 
     async loadData(country) {
-        const data = await fetchData(country);
+        const {cases, deaths, recovered} = await fetchData(country);
         this.setState({
             chartData: {
-                labels: Object.keys(data.timeline.cases),
+                labels: Object.keys(cases),
                 datasets: [
                     {
                         label: 'Cases',
-                        data: Object.values(data.timeline.cases),
+                        data: Object.values(cases),
                         fill: true,
                         borderColor: 'red'
                     },
                     {
                         label: 'Deaths',
-                        data: Object.values(data.timeline.deaths),
+                        data: Object.values(deaths),
                         fill: true,
                         borderColor: 'blue'
                     },
                     {
                         label: 'Recovered',
-                        data: Object.values(data.timeline.recovered),
+                        data: Object.values(recovered),
                         fill: true,
                         borderColor: 'green'
                     }

@@ -5,8 +5,10 @@ import Select from 'react-select'
 import Chart from 'components/Chart';
 import Layout from 'components/Layout';
 import Container from 'components/Container';
+import Mapbox from "../components/Mapbox";
 
 const options = [
+    {value: 'Brazil', label: 'Brazil'},
     {value: 'China', label: 'China'},
     {value: 'Japan', label: 'Japan'},
     {value: 'USA', label: 'USA'},
@@ -36,6 +38,7 @@ const GraphPage = () => {
                     onChange={handleChange}
                 />
                 <Chart country={selectedValue}/>
+                <Mapbox/>
             </Container>
         </Layout>
     );

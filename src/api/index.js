@@ -8,8 +8,8 @@ const url = 'https://corona.lmao.ninja/v2/historical/';
 
 export const fetchData = async(country) => {
     try {
-        const {data} = await axios.get(`${url}${country}?lastdays=all`);
-        return data;
+        const {data: {timeline: {cases, deaths, recovered}}} = await axios.get(`${url}${country}?lastdays=all`);
+        return {cases, deaths, recovered};
     } catch (error) {
         console.log("error");
     }
