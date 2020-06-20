@@ -39,7 +39,6 @@ const GraphPage = () => {
                     onChange={handleChange}
                 />
                 <Chart country={selectedValue}/>
-                <Mapbox/>
             </Container>
         </Layout>
     );

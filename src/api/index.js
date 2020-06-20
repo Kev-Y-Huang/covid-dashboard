@@ -34,7 +34,6 @@ const fetchCountryData = async () => {
             }
             return points;
         }, []);
-        console.log(points);
         return points;
     } catch (error) {
         console.log("error");
@@ -52,7 +51,6 @@ const fetchUSCountyData = async() => {
                 parseFloat(country.coordinates.latitude)
             ]
         }));
-        console.log(points);
         return points;
     } catch (error) {
         console.log("error");

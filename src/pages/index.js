@@ -6,6 +6,7 @@ import axios from 'axios';
 import Layout from 'components/Layout';
 import Container from 'components/Container';
 import Map from 'components/Map';
+import Mapbox from '../components/Mapbox';
 
 const LOCATION = {
   lat: 0,
@@ -120,13 +121,7 @@ const IndexPage = () => {
       <Helmet>
         <title>Home Page</title>
       </Helmet>
-
-      <Map {...mapSettings}/>
-
-      <Container type="content" className="text-center home-start">
-        <h2>This is a test</h2>
-        <p>Testing mapping!</p>
-      </Container>
+      <Mapbox/>
     </Layout>
   );
 };

@@ -27,7 +27,7 @@ class Mapbox extends Component {
                 stroked: false,
                 filled: true,
                 getPosition: d => d.coordinates,
-                getRadius: d => Math.log(d.cases) * 3000,
+                getRadius: d => Math.sqrt(d.cases) * 500,
                 getFillColor: [255, 200, 0]
             })
         });
@@ -38,9 +38,9 @@ class Mapbox extends Component {
         return (
             <DeckGL
                 initialViewState={this.state.viewport}
-                style={{'position': 'relative'}}
-                width={'50vw'}
-                height={'50vh'}
+                style={{position: 'relative', textAlign: 'center'}}
+                width={'100%'}
+                height={'100%'}
                 controller={true}
                 layers={this.state.layer}
                 onHover={this._onHover}
