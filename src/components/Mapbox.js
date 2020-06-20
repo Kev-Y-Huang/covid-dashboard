@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
-import ReactMapGL from 'react-map-gl';
+import DeckGL, {ScatterplotLayer} from 'deck.gl';
+import {StaticMap} from 'react-map-gl';
+import {fetchData} from '../api';
 
 class Mapbox extends Component {
     constructor(props) {
@@ -12,45 +14,41 @@ class Mapbox extends Component {
                 zoom: 4,
                 bear: 0,
                 pitch: 0,
-                width: '50vw',
-                height: '80vh',
                 maxZoom: 8
             }
         };
     }
 
-    _onHover = event => {
-        const {
-            features,
-            srcEvent: {offsetX, offsetY}
-        } = event;
-        const hoveredFeature = features && features.find(f => f.layer.id === 'state-label');
-        this.setState({hoveredFeature, x: offsetX, y: offsetY});
-    };
-
-    _renderTooltip() {
-        const {hoveredFeature, x, y} = this.state;
-
-        return (
-            hoveredFeature && (
-                <div className="tooltip" style={{left: x, top: y}}>
-                    <div>State: {hoveredFeature.properties.name}</div>\
-                </div>
-            )
-        );
+    async componentDidMount() {
+        this.setState({
+            layer: new ScatterplotLayer({
+                id: 'covid-cases',
+                data: await fetchData(),
+                stroked: false,
+                filled: true,
+                getPosition: d => d.coordinates,
+                getRadius: d => Math.log(d.cases) * 3000,
+                getFillColor: [255, 200, 0]
+            })
+        });
     }
 
     render() {
+        console.log(this.state.layer);
         return (
-            <ReactMapGL
-                {...this.state.viewport}
-                mapStyle={'mapbox://styles/mapbox/dark-v10'}
-                mapboxApiAccessToken={process.env.MAPBOX_ACCESS_TOKEN}
-                onViewportChange={(viewport) => this.setState({viewport})}
+            <DeckGL
+                initialViewState={this.state.viewport}
+                style={{'position': 'relative'}}
+                width={'50vw'}
+                height={'50vh'}
+                controller={true}
+                layers={this.state.layer}
                 onHover={this._onHover}
             >
-                {this._renderTooltip()}
-            </ReactMapGL>
+                <StaticMap
+                    mapStyle={'mapbox://styles/mapbox/dark-v10'}
+                    mapboxApiAccessToken={process.env.MAPBOX_ACCESS_TOKEN}/>>
+            </DeckGL>
         )
     }
 }

@@ -18,17 +18,52 @@ export const fetchHistData = async (country) => {
     }
 };
 
-export const fetchData = async () => {
+const fetchCountryData = async () => {
     try {
-        const {data} = await axios.get(`${url}countries`);
+        const {data} = await axios.get(`${url}jhucsse`);
+        const points = data.reduce((points, country) => {
+            if (country.country !== "US") {
+                points.push({
+                    name: country.province + ', ' + country.country,
+                    cases: country.stats.confirmed,
+                    coordinates: [
+                        parseFloat(country.coordinates.longitude),
+                        parseFloat(country.coordinates.latitude)
+                    ]
+                });
+            }
+            return points;
+        }, []);
+        console.log(points);
+        return points;
+    } catch (error) {
+        console.log("error");
+    }
+};
+
+const fetchUSCountyData = async() => {
+    try {
+        const {data} = await axios.get(`${url}jhucsse/counties`);
         const points = data.map(country => ({
-            type: 'Feature',
+            name: country.county + ', ' + country.province + ', ' + country.country,
+            cases: country.stats.confirmed,
             coordinates: [
-                country.countryInfo.long,
-                country.countryInfo.lat
+                parseFloat(country.coordinates.longitude),
+                parseFloat(country.coordinates.latitude)
             ]
         }));
+        console.log(points);
         return points;
+    } catch (error) {
+        console.log("error");
+    }
+};
+
+export const fetchData = async() => {
+    try {
+        const other = await fetchCountryData();
+        const us = await fetchUSCountyData();
+        return other.concat(us);
     } catch (error) {
         console.log("error");
     }
