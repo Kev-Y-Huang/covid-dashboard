@@ -18,37 +18,41 @@ export const fetchHistData = async (country) => {
     }
 };
 
-const fetchCountryData = async () => {
+const fetchCountryData = async (type) => {
     try {
         const {data} = await axios.get(`${url}jhucsse`);
-        const points = data.reduce((points, country) => {
+        return data.reduce((points, country) => {
             if (!(country.country === "US" || country.coordinates.latitude === "")) {
                 points.push({
                     name: country.province ? country.province + ', ' + country.country : country.country,
-                    cases: country.stats.confirmed,
+                    cases: country.stats[type],
                     coordinates: [
                         parseFloat(country.coordinates.longitude),
                         parseFloat(country.coordinates.latitude)
                     ]
                 });
+            } else if (type === 'recovered' && country.country === "US" && country.province === 'Recovered') {
+                points.push({
+                    name: country.country,
+                    cases: country.stats[type],
+                    coordinates: [-98.5795, 39.8283]
+                });
             }
             return points;
         }, []);
-        return points;
     } catch (error) {
         console.log("error");
     }
 };
 
-const fetchUSCountyData = async () => {
+const fetchUSCountyData = async (type) => {
     try {
         const {data} = await axios.get(`${url}jhucsse/counties`);
-
-        const points = data.reduce((points, county) => {
+        return data.reduce((points, county) => {
             if (county.coordinates.latitude !== "") {
                 points.push({
                     name: county.county + ', ' + county.province + ', ' + county.country,
-                    cases: county.stats.confirmed,
+                    cases: county.stats[type],
                     coordinates: [
                         parseFloat(county.coordinates.longitude),
                         parseFloat(county.coordinates.latitude)
@@ -57,18 +61,20 @@ const fetchUSCountyData = async () => {
             }
             return points;
         }, []);
-        return points;
     } catch (error) {
         console.log("error");
     }
 };
 
-export const fetchData = async () => {
+export const fetchData = async (type) => {
     try {
-        const other = await fetchCountryData();
-        const us = await fetchUSCountyData();
-        return other.concat(us);
+        let other = await fetchCountryData(type);
+        if (type !== 'recovered') {
+            const us = await fetchUSCountyData(type);
+            other = other.concat(us);
+        }
+        return other;
     } catch (error) {
         console.log("error");
     }
-}
+};
