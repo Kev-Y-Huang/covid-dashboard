@@ -52,8 +52,9 @@ class Mapbox extends Component {
             data: this.state.data,
             filled: true,
             opacity: 0.5,
+            radiusMaxPixels: 100,
             getPosition: d => d.coordinates,
-            getRadius: d => Math.sqrt(d.cases) * 250,
+            getRadius: d => Math.sqrt(d.cases) * 500,
             getFillColor: d => [255, 255 - Math.sqrt(d.cases) / max * 255, 0],
             // Enable picking
             pickable: true,
@@ -74,7 +75,9 @@ class Mapbox extends Component {
                 controller={true}
                 layers={layers}
                 getTooltip={info => info.object ? {
-                    html: `<p><b>${info.object.name}</b><br>cases: ${info.object.cases}</p>`
+                    html: `<p><b>${info.object.name}</b>
+                           <br>Confirmed: ${info.object.confirmed}
+                           <br>Deaths: ${info.object.deaths}<br></p>`
                 } : null}
             >
                 <div className={'control-panel'}>

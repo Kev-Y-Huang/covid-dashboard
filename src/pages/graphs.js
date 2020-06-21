@@ -5,24 +5,38 @@ import Select from 'react-select'
 import Chart from 'components/Chart';
 import Layout from 'components/Layout';
 import Container from 'components/Container';
-import Mapbox from "../components/Mapbox";
 
-const options = [
-    {value: 'all', label: 'World'},
-    {value: 'Brazil', label: 'Brazil'},
-    {value: 'China', label: 'China'},
-    {value: 'Japan', label: 'Japan'},
-    {value: 'USA', label: 'USA'},
-    {value: 'UK', label: 'UK'},
-    {value: 'South Korea', label: 'South Korea'}
+let countryOptions = [
+    {value: 'all', label: 'World'}
 ];
+
+const countriesData = require("../assets/data/countries.json");
+
+countriesData.forEach(country => countryOptions.push({
+    value: country.name,
+    label: country.name
+}));
+
+let stateOptions = [];
+
+const statesData = require("../assets/data/states.json");
+
+statesData.forEach(state => stateOptions.push({
+    value: state.abbreviation,
+    label: state.name
+}));
 
 
 const GraphPage = () => {
-    const [selectedValue, setSelectedValue] = useState('all');
+    const [selectedCountryValue, setSelectedCountryValue] = useState('all');
 
-    const handleChange = e => {
-        setSelectedValue(e.value);
+    const handleCountryChange = e => {
+        setSelectedCountryValue(e.value);
+    };
+    const [selectedStateValue, setSelectedStateValue] = useState('AL');
+
+    const handleStateChange = e => {
+        setSelectedStateValue(e.value);
     };
 
     return (
@@ -34,11 +48,18 @@ const GraphPage = () => {
                 <h2>Graphs of COVID Cases for Countries</h2>
                 <Select
                     placeholder={"Select Country"}
-                    value={options.find(obj => obj.value === selectedValue)}
-                    options={options}
-                    onChange={handleChange}
+                    value={countryOptions.find(obj => obj.value === selectedCountryValue)}
+                    options={countryOptions}
+                    onChange={handleCountryChange}
                 />
-                <Chart country={selectedValue}/>
+                <Chart country={selectedCountryValue}/>
+                <h2>Graphs of COVID Cases for States</h2>
+                <Select
+                    placeholder={"Select State"}
+                    value={stateOptions.find(obj => obj.value === selectedStateValue)}
+                    options={stateOptions}
+                    onChange={handleStateChange}
+                />
             </Container>
         </Layout>
     );
