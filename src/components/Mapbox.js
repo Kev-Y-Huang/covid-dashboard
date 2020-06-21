@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import DeckGL, {ScatterplotLayer} from 'deck.gl';
-import {StaticMap} from 'react-map-gl';
+import {Popup, StaticMap} from 'react-map-gl';
 import {fetchData} from '../api';
 
 class Mapbox extends Component {
@@ -15,26 +15,36 @@ class Mapbox extends Component {
                 bear: 0,
                 pitch: 0,
                 maxZoom: 8
-            }
+            },
+            data: []
         };
     }
 
-    async componentDidMount() {
-        this.setState({
-            layer: new ScatterplotLayer({
-                id: 'covid-cases',
-                data: await fetchData(),
-                stroked: false,
-                filled: true,
-                getPosition: d => d.coordinates,
-                getRadius: d => Math.sqrt(d.cases) * 500,
-                getFillColor: [255, 200, 0]
-            })
-        });
+    async componentWillMount() {
+        this.setState({data: await fetchData()});
     }
 
     render() {
-        console.log(this.state.layer);
+        console.log(this.state.data);
+
+        const layers = new ScatterplotLayer({
+            id: 'covid-cases',
+            data: this.state.data,
+            stroked: false,
+            filled: true,
+            getPosition: d => d.coordinates,
+            getRadius: d => Math.sqrt(d.cases) * 500,
+            getFillColor: [255, 200, 0],
+            // Enable picking
+            pickable: true,
+            // Update app state
+            onHover: info => this.setState({
+                hoveredObject: info.object,
+                pointerX: info.x,
+                pointerY: info.y
+            })
+        });
+
         return (
             <DeckGL
                 initialViewState={this.state.viewport}
@@ -42,12 +52,14 @@ class Mapbox extends Component {
                 width={'100%'}
                 height={'100%'}
                 controller={true}
-                layers={this.state.layer}
-                onHover={this._onHover}
+                layers={layers}
+                getTooltip={info => info.object ? {
+                    html: `<p><b>${info.object.name}</b><br>cases: ${info.object.cases}</p>`
+                } : null}
             >
                 <StaticMap
                     mapStyle={'mapbox://styles/mapbox/dark-v10'}
-                    mapboxApiAccessToken={process.env.MAPBOX_ACCESS_TOKEN}/>>
+                    mapboxApiAccessToken={process.env.MAPBOX_ACCESS_TOKEN}/>
             </DeckGL>
         )
     }

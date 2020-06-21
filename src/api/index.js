@@ -22,9 +22,9 @@ const fetchCountryData = async () => {
     try {
         const {data} = await axios.get(`${url}jhucsse`);
         const points = data.reduce((points, country) => {
-            if (country.country !== "US") {
+            if (!(country.country === "US" || country.coordinates.latitude === "")) {
                 points.push({
-                    name: country.province + ', ' + country.country,
+                    name: country.province ? country.province + ', ' + country.country : country.country,
                     cases: country.stats.confirmed,
                     coordinates: [
                         parseFloat(country.coordinates.longitude),
@@ -40,24 +40,30 @@ const fetchCountryData = async () => {
     }
 };
 
-const fetchUSCountyData = async() => {
+const fetchUSCountyData = async () => {
     try {
         const {data} = await axios.get(`${url}jhucsse/counties`);
-        const points = data.map(country => ({
-            name: country.county + ', ' + country.province + ', ' + country.country,
-            cases: country.stats.confirmed,
-            coordinates: [
-                parseFloat(country.coordinates.longitude),
-                parseFloat(country.coordinates.latitude)
-            ]
-        }));
+
+        const points = data.reduce((points, county) => {
+            if (county.coordinates.latitude !== "") {
+                points.push({
+                    name: county.county + ', ' + county.province + ', ' + county.country,
+                    cases: county.stats.confirmed,
+                    coordinates: [
+                        parseFloat(county.coordinates.longitude),
+                        parseFloat(county.coordinates.latitude)
+                    ]
+                });
+            }
+            return points;
+        }, []);
         return points;
     } catch (error) {
         console.log("error");
     }
 };
 
-export const fetchData = async() => {
+export const fetchData = async () => {
     try {
         const other = await fetchCountryData();
         const us = await fetchUSCountyData();
