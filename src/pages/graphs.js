@@ -2,9 +2,10 @@ import React, {useState} from 'react';
 import {Helmet} from 'react-helmet';
 import Select from 'react-select'
 
-import Chart from 'components/Chart';
 import Layout from 'components/Layout';
 import Container from 'components/Container';
+import CountryChart from '../components/CountryChart';
+import StateChart from '../components/StateChart';
 
 let countryOptions = [
     {value: 'all', label: 'World'}
@@ -52,7 +53,7 @@ const GraphPage = () => {
                     options={countryOptions}
                     onChange={handleCountryChange}
                 />
-                <Chart country={selectedCountryValue}/>
+                <CountryChart country={selectedCountryValue}/>
                 <h2>Graphs of COVID Cases for States</h2>
                 <Select
                     placeholder={"Select State"}
@@ -60,6 +61,8 @@ const GraphPage = () => {
                     options={stateOptions}
                     onChange={handleStateChange}
                 />
+                <StateChart state={selectedStateValue} sort={'cumulative'}/>
+                <StateChart state={selectedStateValue} sort={'daily'}/>
             </Container>
         </Layout>
     );

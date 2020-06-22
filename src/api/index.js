@@ -74,12 +74,29 @@ const fetchUSCountyData = async (type) => {
     }
 };
 
-const fetchStateData = async (state) => {
+export const fetchStateData = async (state) => {
     try {
-        const {data} = await axios.get(`${covid_url}v1/states/${state}/daily.json`);
-        return data.map(date => ({
-
-        }))
+        const {data} = await axios.get(`${covid_url}v1/states/${state.toLowerCase()}/daily.json`);
+        let states = {
+            dates: [],
+            confirmed: [],
+            deaths: [],
+            recovered: [],
+            hospitalizedCurrently: [],
+            positiveIncrease: [],
+            deathIncrease: []
+        };
+        data.forEach((data, index) => {
+            const date = data.date.toString();
+            states.dates.unshift(date.substring(4,6) + '/' + date.substring(6) + '/' + date.substring(0,4));
+            states.confirmed.unshift(data.positive);
+            states.deaths.unshift(data.death);
+            states.recovered.unshift(data.recovered ? data.recovered : 0);
+            states.hospitalizedCurrently.unshift(data.hospitalizedCurrently);
+            states.positiveIncrease.unshift(data.positiveIncrease);
+            states.deathIncrease.unshift(data.deathIncrease);
+        });
+        return states;
     } catch (error) {
         console.log("error");
     }

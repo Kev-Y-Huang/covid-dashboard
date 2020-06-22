@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {fetchHistData} from '../api';
 import {Line} from 'react-chartjs-2';
 
-class Chart extends Component {
+class CountryChart extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -70,4 +70,4 @@ class Chart extends Component {
     }
 }
 
-export default Chart;
+export default CountryChart;
