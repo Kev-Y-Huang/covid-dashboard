@@ -74,6 +74,20 @@ const fetchUSCountyData = async (type) => {
     }
 };
 
+function movingAvg(arr, avgArr) {
+    for (let i = arr.length - 1; i >= 0; i--) {
+        let avg = 0;
+        let j = 0;
+        for (let k = 0; k < 14; k++, j++) {
+            if (i - j < 0) {
+                break;
+            }
+            avg += arr[i - j];
+        }
+        avgArr.unshift(avg / j);
+    }
+}
+
 export const fetchStateData = async (state) => {
     try {
         const {data} = await axios.get(`${covid_url}v1/states/${state.toLowerCase()}/daily.json`);
@@ -84,11 +98,12 @@ export const fetchStateData = async (state) => {
             recovered: [],
             hospitalizedCurrently: [],
             positiveIncrease: [],
-            deathIncrease: []
+            deathIncrease: [],
+            movingAvgCases: []
         };
         data.forEach((data, index) => {
             const date = data.date.toString();
-            states.dates.unshift(date.substring(4,6) + '/' + date.substring(6) + '/' + date.substring(0,4));
+            states.dates.unshift(date.substring(4, 6) + '/' + date.substring(6) + '/' + date.substring(0, 4));
             states.confirmed.unshift(data.positive);
             states.deaths.unshift(data.death);
             states.recovered.unshift(data.recovered ? data.recovered : 0);
@@ -96,6 +111,7 @@ export const fetchStateData = async (state) => {
             states.positiveIncrease.unshift(data.positiveIncrease);
             states.deathIncrease.unshift(data.deathIncrease);
         });
+        movingAvg(states.positiveIncrease, states.movingAvgCases);
         return states;
     } catch (error) {
         console.log("error");

@@ -56,6 +56,12 @@ class StateChart extends Component {
                         data: Object.values(data.deathIncrease),
                         fill: true,
                         borderColor: 'yellow'
+                    },
+                    {
+                        label: 'Moving Average of Daily Cases',
+                        data: Object.values(data.movingAvgCases),
+                        fill: true,
+                        borderColor: 'black'
                     }
                 ] : [
                     {
